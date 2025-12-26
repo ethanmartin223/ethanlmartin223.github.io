@@ -1,0 +1,773 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ethan Martin – Developer Resume</title>
+  <meta name="description" content="Developer resume and project portfolio">
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --panel: #12151c;
+      --text: #e6e6eb;
+      --muted: #9aa0aa;
+
+      --accent1: #00f0ff;
+      --accent2: #a855f7;
+      --accent3: #ff4ecd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: radial-gradient(circle at top, #111827, var(--bg));
+      color: var(--text);
+    }
+
+    /* ================= HERO ================= */
+
+    .hero {
+      position: relative;
+      height: 40vh;
+      max-height: 320px;
+      min-height: 320px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+
+    .hero-content {
+      text-align: center;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 6vw, 5rem);
+      margin: 0;
+    }
+
+    .subtitle {
+      color: var(--accent1);
+      font-size: 1.2rem;
+    }
+
+    .meta {
+      color: var(--muted);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .social-links a {
+      opacity: 0.7;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .social-links a:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+
+    .social-links img {
+      width: 32px;
+      height: 32px;
+      filter: invert(1);
+    }
+
+    .hero-glow {
+      position: absolute;
+      inset: -50%;
+      background:
+        radial-gradient(circle at 30% 30%, var(--accent2), transparent 40%),
+        radial-gradient(circle at 70% 60%, var(--accent3), transparent 40%);
+      filter: blur(120px);
+      opacity: 0.5;
+    }
+
+    /* ================= PROJECTS ================= */
+
+    .projects-section {
+      padding: 4rem 0 0;
+    }
+
+    .projects-section h2 {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 2.5rem;
+      margin: 0;
+      z-index: 3;
+    }
+
+    .carousel {
+      position: relative;
+      overflow: visible;
+      margin-top: 0;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 2rem;
+      padding: 6rem calc(50vw - 200px);
+      scroll-snap-type: x mandatory;
+      overflow-x: auto;
+      overflow-y: visible;
+      scroll-behavior: smooth;
+      cursor: grab;
+      user-select: none;
+      scroll-padding: 0 calc(50vw - 200px);
+    }
+
+    .carousel-track:active {
+      cursor: grabbing;
+    }
+
+    .carousel-track::-webkit-scrollbar {
+      height: 0px;
+      display: block;
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      z-index: 3;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+      opacity: 0.3;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      width: 12px;
+      height: 12px;
+      background: var(--accent1);
+      opacity: 1;
+      box-shadow: 0 0 20px var(--accent1);
+    }
+
+    .project-card {
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      flex: 0 0 400px;
+      height: 260px;
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--panel);
+
+      transform: scale(0.85);
+      opacity: 0.6;
+      filter: blur(1px);
+      transition:
+        transform 0.4s ease,
+        opacity 0.4s ease,
+        filter 0.4s ease,
+        box-shadow 0.4s ease;
+      cursor: pointer;
+    }
+
+    .project-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: linear-gradient(135deg, var(--accent2), var(--accent1));
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* ACTIVE / CENTER CARD */
+    .project-card.active {
+      transform: scale(1);
+      opacity: 1;
+      filter: none;
+      box-shadow:
+        0 0 20px rgba(0,240,255,0.3),
+        0 0 60px rgba(168,85,247,0.2);
+      z-index: 2;
+    }
+
+    /* Hover glow only when active */
+    .project-card.active:hover {
+      box-shadow:
+        0 0 30px var(--accent1),
+        0 0 80px rgba(255,78,205,0.3);
+    }
+
+    /* Overlay behavior */
+    .project-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+      opacity: 0;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      transition: opacity 0.3s;
+    }
+
+    .project-card.active:hover .project-overlay {
+      opacity: 1;
+    }
+
+    .project-overlay h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--accent1);
+    }
+
+    .project-overlay p {
+      margin: 0 0 0.5rem 0;
+    }
+
+    .project-overlay span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    /* ================= SKILLS + EXPERIENCE SPLIT ================= */
+
+    .split-section {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 6rem;
+      max-width: 1200px;
+      margin: auto;
+      padding: 4rem 2rem;
+    }
+
+    .skills-section h2,
+    .experience-section h2 {
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Skills layout */
+    .skill-group {
+      background: var(--panel);
+      padding: 1.5rem;
+      border-radius: 14px;
+      margin-bottom: 1.5rem;
+    }
+
+    .skill-group h3 {
+      margin-top: 0;
+      color: var(--accent1);
+    }
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .skill {
+      padding: 0.4rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      font-size: 0.9rem;
+    }
+
+    /* Optional icon grid */
+    .skill-icons {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 40px);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .skill-icons img {
+      width: 40px;
+      height: 40px;
+      filter: invert(1);
+      opacity: 0.8;
+    }
+
+
+    /* ================= EXPERIENCE ================= */
+
+
+    .timeline {
+      max-width: 800px;
+      margin: auto;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(var(--accent1), var(--accent2));
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 1rem;
+      margin-left: 20px;
+      margin-bottom: 3rem;
+    }
+
+    .time {
+      color: var(--accent1);
+      font-weight: bold;
+      margin-left:10px;
+    }
+
+    .timeline .content {
+      background: var(--panel);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 0 0 transparent;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .timeline .content:hover {
+      transform: translateX(4px);
+      box-shadow: 0 0 40px rgba(0,240,255,0.25);
+    }
+
+    .timeline .content h3 {
+      margin-top: 0;
+      color: var(--text);
+    }
+    /* ================= TIMELINE IMAGE ================= */
+
+    .timeline .content {
+      display: grid;
+      grid-template-columns: 1fr 72px; /* text | image */
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .timeline .content-text {
+      grid-column: 1;
+    }
+
+    .timeline .content-image {
+      width: 80px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .timeline .content-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ================= MOBILE STACKING ================= */
+
+    @media (max-width: 900px) {
+      .split-section {
+        grid-template-columns: 1fr;   /* stack vertically */
+        gap: 3rem;
+      }
+
+      /* Ensure order: Skills first, Experience second */
+      .skills-section {
+        order: 1;
+      }
+
+      .experience-section {
+        order: 2;
+      }
+
+      /* Optional: center timeline a bit more on mobile */
+      .timeline {
+        max-width: 100%;
+      }
+
+      /* Reduce left offset so timeline fits small screens better */
+      .timeline::before {
+        left: 10px;
+      }
+
+      .timeline-item {
+        grid-template-columns: 60px 1fr;
+      }
+
+      .time {
+        margin-left: 15px;
+        font-size: 0.9rem;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- HERO / BANNER -->
+<header class="hero">
+  <div class="hero-content">
+    <h1>Ethan Martin</h1>
+    <p class="subtitle">Software Developer and US Army Solider</p>
+    <p class="meta">Java • Python • C/C++ • CAD/CAM</p>
+    <div class="social-links">
+      <a href="#" target="_blank" rel="noopener" title="Share">
+        <img src="img/email.png"/>
+      </a>
+      <a href="https://github.com/ethanmartin223" target="_blank" rel="noopener" title="GitHub">
+        <img src="img/github.png"/>
+      </a>
+      <a href="discord://-/users/953798107299213332" target="_blank" rel="noopener" title="Discord">
+        <img src="img/discord.png"/>
+      </a>
+      <a href="https://www.instagram.com/ethanlmartin223/" target="_blank" rel="noopener" title="Instagram">
+        <img src="img/instagram.png"/>
+      </a>
+      <a href="https://www.linkedin.com/in/ethanlmartin223" target="_blank" rel="noopener" title="LinkedIn">
+        <img src="img/linkedin.png"/>
+      </a>
+      <a href="#" target="_blank" rel="noopener" title="YouTube">
+        <img src="img/youtube.png"/>
+      </a>
+    </div>
+  </div>
+  <div class="hero-glow"></div>
+</header>
+
+<!-- PROJECT CAROUSEL -->
+<section class="projects-section">
+  <h2>Projects</h2>
+
+  <div class="carousel" id="carousel">
+    <div class="carousel-track" id="carouselTrack">
+
+      <div class="project-card" data-url="https://github.com/ethanmartin223/FractalRenderer">
+        <img src="img/projectImages/mandlebrot.png" alt="Project 1">
+        <div class="project-overlay">
+          <h3>Mandelbrot Set Renderer</h3>
+          <p>Multithreaded CPU-Rendered View of the Mandelbrot set</p>
+          <span>2023</span>
+        </div>
+      </div>
+
+      <div class="project-card" data-url="https://github.com/ethanmartin223/Asteroids">
+        <img src="img/projectImages/asteriods.gif" alt="Project 3">
+        <div class="project-overlay">
+          <h3>Asteroids Clone</h3>
+          <p>Intro to Python Class Final Project</p>
+          <span>2020</span>
+        </div>
+      </div>
+
+      <div class="project-card" data-url="https://github.com/ethanmartin223/Schem">
+        <img src="img/projectImages/wireworkssplash.png" alt="Project 2">
+        <div class="project-overlay">
+          <h3>Electrical Circuit Editor</h3>
+          <p>Circuit Simulation/Editor Software (Java)</p>
+          <span>2025</span>
+        </div>
+      </div>
+
+      <div class="project-card" data-url="https://github.com/ethanmartin223/Pacman">
+        <img src="img/projectImages/pacman.gif" alt="Project 2">
+        <div class="project-overlay">
+          <h3>Pacman Clone</h3>
+          <p>Written in Java for a Game Design Class</p>
+          <span>2022</span>
+        </div>
+      </div>
+
+      <div class="project-card" data-url="https://github.com/ethanmartin223/ReactionTableFlowchart">
+        <img src="img/projectImages/ReactionFlowcharts.png" alt="Project 3">
+        <div class="project-overlay">
+          <h3>Reaction Optimizer</h3>
+          <p>Project for a Chemistry Class on Optimization</p>
+          <span>2022</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </div>
+</section>
+
+
+<section class="split-section">
+
+  <!-- SKILLS (LEFT COLUMN) -->
+  <div class="skills-section">
+    <h2>Skills</h2>
+
+    <div class="skill-group">
+      <h3>Languages</h3>
+      <div class="skill-list">
+        <span class="skill">Java</span>
+        <span class="skill">Python</span>
+        <span class="skill">C</span>
+        <span class="skill">C++</span>
+        <span class="skill">Lua</span>
+        <span class="skill">HTML/CSS</span>
+        <span class="skill">JS</span>
+        <span class="skill">SQL</span>
+        <span class="skill">Batch/Shell Scripting</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <h3>Software</h3>
+      <div class="skill-list">
+        <span class="skill">Git</span>
+        <span class="skill">Linux/Windows/Mac</span>
+        <span class="skill">Jetbrains Products</span>
+        <span class="skill">Android Studio</span>
+        <span class="skill">Visual Studio & VS Code</span>
+        <span class="skill">VIM</span>
+        <span class="skill">Burp Suite</span>
+        <span class="skill">ZAP</span>
+        <span class="skill">Ghidra/IDA Pro</span>
+        <span class="skill">Universal Radio Hacker</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <h3>Engineering / CAD</h3>
+      <div class="skill-list">
+        <span class="skill">Fusion360 & AutoCAD</span>
+        <span class="skill">OnShape CAD</span>
+        <span class="skill">Technical Drawings</span>
+        <span class="skill">Blender</span>
+        <span class="skill">3D Modeling</span>
+        <span class="skill">Soldering/Electrical Work</span>
+        <span class="skill">Working with IOT devices</span>
+      </div>
+    </div>
+
+    <!-- OPTIONAL ICON GRID -->
+    <div class="skill-group">
+      <h3>Library Experience</h3>
+      <div class="skill-list">
+        <span class="skill">Swing/AWT</span>
+        <span class="skill">OpenGL</span>
+        <span class="skill">Numpy/Pandas</span>
+        <span class="skill">Tcl/Tk</span>
+        <span class="skill">OpenCV</span>
+        <span class="skill">LibGDX</span>
+        <span class="skill">Unity</span>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE (RIGHT COLUMN) -->
+  <div class="experience-section">
+    <h2>Experience</h2>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="time">2025 - Present</div>
+        <div class="content">
+          <div class="content-text">
+            <h3>Electromagnetic Warfare Specialist</h3>
+            <h5>US Army National Guard</h5>
+            <p>
+              Experience in operating and maintaining advanced electromagnetic warfare systems, as well as working with classified technology and handling sensitive information.
+            </p>
+          </div>
+          <div class="content-image">
+            <img src="img/experiences/paguard.png" alt="US Army">
+          </div>
+        </div>
+      </div>
+
+
+      <div class="timeline-item">
+        <div class="time">May 2025 - December 2025</div>
+        <div class="content">
+          <div class="content-text">
+            <h3>US Army Cyber School</h3>
+            <h5>Army MOS Training</h5>
+            <p>
+              Received training in network security, cyber defense, and electronic warfare. Gained hands-on experience with various cybersecurity tools and techniques as well as languages like python for interfacing with electromagnetic devices.
+            </p>
+          </div>
+          <div class="content-image">
+            <img src="img/experiences/armycyber.png" alt="Army Cyber School">
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time">2023 - Present</div>
+        <div class="content">
+          <div class="content-text">
+            <h3>Bachelors in Computer Science</h3>
+            <h5>Elizabethtown College & Millersville University</h5>
+            <p>
+              Pursuing a Bachelor's degree in Computer Science with a focus on software development, algorithms, and data structures.
+            </p>
+          </div>
+          <div class="content-image">
+            <img src="img/experiences/millersville.png" alt="Millersville University">
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time">2020 - 2024</div>
+        <div class="content">
+          <div class="content-text">
+            <h3>High School Education</h3>
+            <h5>Elizabethtown Area High School</h5>
+            <p>
+              Graduated with a focus on STEM subjects, including computer science and mathematics. Participated in various extracurricular activities related to technology and programming clubs and competitions.
+            </p>
+          </div>
+          <div class="content-image">
+            <img src="img/experiences/etownhigh.png" alt="Elizabethtown High School">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+
+<script>
+  const track = document.getElementById('carouselTrack');
+  const cards = Array.from(document.querySelectorAll('.project-card'));
+  const dotsContainer = document.getElementById('carouselDots');
+
+  let activeCardIndex = -1;
+
+  // Create dots
+  cards.forEach((card, index) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.addEventListener('click', () => {
+      cards[index].scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest'
+      });
+    });
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = Array.from(document.querySelectorAll('.dot'));
+
+  function updateActiveCard() {
+    const trackRect = track.getBoundingClientRect();
+    const centerX = trackRect.left + trackRect.width / 2;
+
+    let closestCard = null;
+    let closestDistance = Infinity;
+    let closestIndex = 0;
+
+    cards.forEach((card, index) => {
+      const rect = card.getBoundingClientRect();
+      const cardCenter = rect.left + rect.width / 2;
+      const distance = Math.abs(centerX - cardCenter);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestCard = card;
+        closestIndex = index;
+      }
+    });
+
+    cards.forEach(card => card.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+
+    if (closestCard) {
+      closestCard.classList.add('active');
+      dots[closestIndex].classList.add('active');
+      activeCardIndex = closestIndex;
+    }
+  }
+
+  // Click handler for project cards
+  cards.forEach((card, index) => {
+    card.addEventListener('click', (e) => {
+      if (activeCardIndex === index) {
+        // Card is already centered - navigate to project page
+        const url = card.getAttribute('data-url');
+        if (url) {
+          window.location.href = url;
+        }
+      } else {
+        // Card is not centered - center it
+        card.scrollIntoView({
+          behavior: 'smooth',
+          inline: 'center',
+          block: 'nearest'
+        });
+      }
+    });
+  });
+
+  // Drag to scroll functionality
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  track.addEventListener('mousedown', (e) => {
+    isDown = true;
+    startX = e.pageX - track.offsetLeft;
+    scrollLeft = track.scrollLeft;
+  });
+
+  track.addEventListener('mouseleave', () => {
+    isDown = false;
+  });
+
+  track.addEventListener('mouseup', () => {
+    isDown = false;
+  });
+
+  track.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - track.offsetLeft;
+    const walk = (x - startX) * 2;
+    track.scrollLeft = scrollLeft - walk;
+  });
+
+  // Update on scroll
+  track.addEventListener('scroll', updateActiveCard);
+
+  // Initial state - center middle card
+  setTimeout(() => {
+    if (cards.length > 0) {
+      const middleIndex = Math.floor(cards.length / 2);
+      cards[middleIndex].scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest'
+      });
+    }
+    updateActiveCard();
+  }, 100);
+</script>
+</body>
+
+</html>
